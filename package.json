@@ -1,7 +1,7 @@
 {
   "name": "googlebooks-app",
   "version": "1.0.0",
-  "description": "",
+  "description": "book search engine",
   "main": "server/server.js",
   "scripts": {
     "start": "node server/server.js",
@@ -16,6 +16,8 @@
     "concurrently": "^8.2.0"
   },
   "dependencies": {
-    "bcrypt": "^5.1.1"
+    "apollo-server": "^3.12.0",
+    "bcrypt": "^5.1.1",
+    "graphql": "^16.8.0"
   }
 }
