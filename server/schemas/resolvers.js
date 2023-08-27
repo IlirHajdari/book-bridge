@@ -1,38 +1,34 @@
-// import user model
 const { User } = require("../models");
-// import sign token function from auth
 const { signToken, AuthenticationError } = require("../utils/auth");
 
-// GET
 const resolvers = {
   Query: {
     me: async (parent, args, context) => {
       if (context.user) {
-        return Profile.findOne({ _id: context.user._id });
+        return User.findOne({ _id: context.user._id });
       }
-      throw AuthenticationError;
+      throw new AuthenticationError("You are not logged in.");
     },
   },
 
-  // POST, PUT, DELETE
   Mutation: {
     createUser: async (parent, { username, email, password }) => {
       const user = await User.create({ username, email, password });
       const token = signToken(user);
-
       return { token, user };
     },
+
     login: async (parent, { email, password }) => {
       const user = await User.findOne({ email });
 
       if (!user) {
-        throw AuthenticationError;
+        throw new AuthenticationError("User not found!");
       }
 
-      const correctPw = await Profile.isCorrectPassword(password);
+      const correctPw = await user.isCorrectPassword(password);
 
       if (!correctPw) {
-        throw AuthenticationError;
+        throw new AuthenticationError("Incorrect password!");
       }
 
       const token = signToken(user);
@@ -43,16 +39,14 @@ const resolvers = {
       if (context.user) {
         return User.findOneAndUpdate(
           { _id: userId },
-          {
-            $addToSet: { savedBooks: bookId },
-          },
+          { $addToSet: { savedBooks: bookId } },
           {
             new: true,
             runValidators: true,
           }
         );
       }
-      throw AuthenticationError;
+      throw new AuthenticationError("You need to be logged in.");
     },
 
     deleteBook: async (parent, { bookId }, context) => {
@@ -63,7 +57,7 @@ const resolvers = {
           { new: true }
         );
       }
-      throw AuthenticationError;
+      throw new AuthenticationError("You need to be logged in.");
     },
   },
 };
