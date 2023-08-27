@@ -3,7 +3,7 @@ const path = require("path");
 const db = require("./config/connection");
 const { ApolloServer } = require("apollo-server-express");
 const typeDefs = require("./schemas");
-const resolvers = require("./resolvers");
+const resolvers = require("./schemas/resolvers");
 const { contextMiddleware } = require("./utils/auth"); // Assuming auth.js is in 'utils' folder.
 
 const PORT = process.env.PORT || 3001;
